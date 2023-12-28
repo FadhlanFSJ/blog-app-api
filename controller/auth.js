@@ -7,7 +7,7 @@ export const register = (req, res) => {
     const q = "SELECT * FROM users WHERE email = ? OR username = ?";
     db.query(q, [req.body.email, req.body.name], (err, data) => {
         if (err) return res.status(500).json(err)
-        if (data.lenght) return res.status(409).json("User Already exist!");
+        if (data.length) return res.status(409).json("User Already exist!");
         //Hash the password
 
         const salt = bcrypt.genSaltSync(10);
@@ -21,8 +21,8 @@ export const register = (req, res) => {
         ]
 
         db.query(q, [values], (err, data) => {
-            if (err) res.json(err)
-            return res.status(200).json("Berhasil menambahkan users!")
+            if (err) res.status(500).json(err)
+            return res.status(200).json("Berhasil menambahkan users!");
         })
     })
 }
