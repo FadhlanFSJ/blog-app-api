@@ -18,21 +18,22 @@ export const register = (req, res) => {
             req.body.username,
             req.body.email,
             hash,
-        ]
+        ];
 
         db.query(q, [values], (err, data) => {
-            if (err) res.status(500).json(err)
+            if (err) res.status(500).json(err);
             return res.status(200).json("Berhasil menambahkan users!");
         })
     })
 }
+
 export const login = (req, res) => {
     //Check User
 
     const q = 'SELECT * FROM users WHERE username = ?'
     db.query(q, [req.body.username], (err, data) => {
         if (err) return res.status(500).json(err);
-        if (data.length === 0) return res.status(404).json("User Not Found!")
+        if (data.length === 0) return res.status(404).json("User Not Found!");
 
         //Check Password
         const isPasswordCorrect = bcrypt.compareSync(req.body.password, data[0].password);
@@ -42,13 +43,13 @@ export const login = (req, res) => {
         const token = jwt.sign({ id: data[0].id }, "jwtkey")
         const { password, ...other } = data[0]
         res.cookie("access_token", token, {
-            httpOnly: true
+            httpOnly: true,
         }).status(200).json(other)
     })
 }
 export const logout = (req, res) => {
     res.clearCookie("access_token", {
         sameSite: "none",
-        secure: true,
+        secure: true
     }).status(200).json("Berhasil melakukan Logout!");
 }
